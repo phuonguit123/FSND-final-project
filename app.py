@@ -26,12 +26,11 @@ def create_app(test_config=None):
 
   @app.route('/movies')
   @requires_auth('get:movies')
-  def get_movies(self):
+  def get_movies(payload):
     movies = Movie.query.all()
     if len(movies) == 0:
       abort(404)
     current_movies = [movie.format() for movie in movies]
-
     return jsonify({
       'success': True,
       'movies': current_movies
@@ -39,7 +38,7 @@ def create_app(test_config=None):
 
   @app.route('/actors')
   @requires_auth('get:actors')
-  def get_actors(self):
+  def get_actors(payload):
     actors = Actor.query.all()
     if len(actors) == 0:
       abort(404)
@@ -53,7 +52,7 @@ def create_app(test_config=None):
 
   @app.route('/movies', methods=['POST'])
   @requires_auth('post:movies')
-  def create_new_movie(self):
+  def create_new_movie(payload):
     body = request.get_json()
 
     new_title = body.get('title', None)
@@ -75,7 +74,7 @@ def create_app(test_config=None):
 
   @app.route('/actors', methods=['POST'])
   @requires_auth('post:actors')
-  def create_new_actor(self):
+  def create_new_actor(payload):
     body = request.get_json()
 
     new_name = body.get('name', None)
